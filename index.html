@@ -69,7 +69,7 @@
             <h2 class="text-cyan-400 font-semibold text-lg flex items-center gap-2">
                 👥 নিবন্ধিত ইউজার তালিকা ও একটিভ সেশন কন্ট্রোল
             </h2>
-            <button onclick="loadUsers()" class="bg-slate-700 hover:bg-slate-600 text-xs px-3 py-1.5 rounded text-slate-300">🔄 রিফ্রেশ</button>
+            <button onclick="loadUsers()" class="bg-slate-700 hover:bg-slate-600 text-xs px-3 py-1.5 rounded text-slate-300 cursor-pointer">🔄 রিফ্রেশ</button>
         </div>
 
         <!-- Stats Cards -->
@@ -109,10 +109,8 @@
     </div>
 
     <script>
-        // আপনার সঠিক ব্যাকএন্ড ওয়ার্কার লিংক (admin)
         const API_URL = "https://admin.bushmr263.workers.dev";
 
-        // সার্ভার থেকে ইউজার তালিকা ফেচ করা
         async function loadUsers() {
             try {
                 const res = await fetch(`${API_URL}/get-users`);
@@ -124,7 +122,6 @@
             }
         }
 
-        // টেবিল রেন্ডার করা
         function renderTable(users) {
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = '';
@@ -145,7 +142,9 @@
 
                 const tr = document.createElement('tr');
                 tr.setAttribute('data-status', u.active ? 'active' : 'blocked');
-                const isOnline = u.deviceId && u.deviceId !== "";
+                
+                const hasDevice = u.deviceId && u.deviceId !== "";
+                const isOnline = u.active && hasDevice;
 
                 tr.innerHTML = `
                     <td class="py-3 px-4">
@@ -154,8 +153,8 @@
                     </td>
                     <td class="py-3 px-4">
                         <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full ${isOnline && u.active ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'অনলাইন সেশন' : 'অফলাইন'}"></span>
-                            <span class="bg-[#0f172a] border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 truncate">${isOnline ? u.deviceId : 'লগইন অপেক্ষমান'}</span>
+                            <span class="w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'অনلاین' : 'অফলাইন'}"></span>
+                            <span class="bg-[#0f172a] border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 truncate">${hasDevice ? u.deviceId : 'কোনো ডিভাইস নেই'}</span>
                         </div>
                     </td>
                     <td class="py-3 px-4">
@@ -180,7 +179,6 @@
             document.getElementById('blockedUsers').innerText = blockedCount;
         }
 
-        // নতুন ইউজার তৈরি (API Call)
         async function addNewUser(event) {
             event.preventDefault();
             const username = document.getElementById('newUsername').value.trim();
@@ -213,7 +211,6 @@
             }
         }
 
-        // ব্লক/আনব্লক (API Call)
         async function toggleUser(username, newStatus) {
             try {
                 await fetch(`${API_URL}/toggle-user`, {
@@ -227,7 +224,6 @@
             }
         }
 
-        // ডিলিট ইউজার (API Call)
         async function deleteUser(username) {
             if (confirm(`আপনি কি নিশ্চিতভাবে ${username} ডিলিট করতে চান?`)) {
                 try {
@@ -243,7 +239,6 @@
             }
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে ডাটা ফেচ করা
         loadUsers();
     </script>
 </body>
