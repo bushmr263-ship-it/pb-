@@ -25,16 +25,16 @@
         <!-- Add User Box -->
         <div class="bg-[#1e293b] border border-slate-700 rounded-xl p-5 shadow-lg">
             <h2 class="text-cyan-400 font-semibold text-lg mb-4 flex items-center gap-2">
-                ➕ নতুন ইউজার তৈরি করুন
+                ➕ নতুন ইউজার তৈরি করুন (১ অ্যাকাউন্ট = ১ সেশন)
             </h2>
-            <form onsubmit="event.preventDefault(); alert('ইউজার সফলভাবে যোগ করা হয়েছে!');" class="space-y-4">
+            <form id="addUserForm" onsubmit="addNewUser(event)" class="space-y-4">
                 <div>
-                    <input type="text" placeholder="ইউজারনেম দিন" required class="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="newUsername" placeholder="ইউজারনেম দিন" required class="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
                 </div>
                 <div>
-                    <input type="password" placeholder="পাসওয়ার্ড দিন" required class="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                    <input type="password" id="newPassword" placeholder="পাসওয়ার্ড দিন" required class="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
                 </div>
-                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-lg transition duration-200 shadow-md">
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-lg transition duration-200 shadow-md cursor-pointer">
                     + ইউজার যোগ করুন
                 </button>
             </form>
@@ -66,22 +66,22 @@
     <!-- Stats & User Table Section -->
     <div class="max-w-6xl mx-auto bg-[#1e293b] border border-slate-700 rounded-xl p-5 shadow-lg">
         <h2 class="text-cyan-400 font-semibold text-lg mb-4 flex items-center gap-2">
-            👥 নিবন্ধিত ইউজার তালিকা
+            👥 নিবন্ধিত ইউজার তালিকা ও একটিভ সেশন কন্ট্রোল
         </h2>
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="bg-[#0f172a] border border-slate-800 rounded-lg p-4 text-center">
                 <div class="text-slate-400 text-sm mb-1">মোট ইউজার</div>
-                <div class="text-2xl font-bold text-amber-400">2</div>
+                <div id="totalUsers" class="text-2xl font-bold text-amber-400">2</div>
             </div>
             <div class="bg-[#0f172a] border border-slate-800 rounded-lg p-4 text-center">
                 <div class="text-slate-400 text-sm mb-1">সক্রিয় (Active)</div>
-                <div class="text-2xl font-bold text-emerald-500">1</div>
+                <div id="activeUsers" class="text-2xl font-bold text-emerald-500">1</div>
             </div>
             <div class="bg-[#0f172a] border border-slate-800 rounded-lg p-4 text-center">
                 <div class="text-slate-400 text-sm mb-1">ব্লকড (Blocked)</div>
-                <div class="text-2xl font-bold text-rose-500">1</div>
+                <div id="blockedUsers" class="text-2xl font-bold text-rose-500">1</div>
             </div>
         </div>
 
@@ -91,42 +91,42 @@
                 <thead>
                     <tr class="border-b border-slate-700 text-slate-400 text-sm">
                         <th class="py-3 px-4">ইউজারনেম ও পাসওয়ার্ড</th>
-                        <th class="py-3 px-4">ডিভাইস আইডি / MAC</th>
+                        <th class="py-3 px-4">ডিভাইস আইডি / MAC (বর্তমান একটিভ সেশন)</th>
                         <th class="py-3 px-4">স্ট্যাটাস</th>
                         <th class="py-3 px-4">অ্যাকশন</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 text-sm">
+                <tbody id="userTableBody" class="divide-y divide-slate-800 text-sm">
                     <!-- User 1 (Active) -->
-                    <tr>
+                    <tr data-status="active">
                         <td class="py-3 px-4">
                             <div class="font-semibold text-white">shawon</div>
                             <div class="text-xs text-slate-400">পাসওয়ার্ড: <span class="text-amber-300 font-mono">123456</span></div>
                         </td>
                         <td class="py-3 px-4 flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="সক্রিয় (Online)"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="অনলাইন"></span>
                             <span class="bg-[#0f172a] border border-slate-700 px-2 py-1 rounded text-xs text-slate-300">Device-3xxe11h</span>
                         </td>
-                        <td class="py-3 px-4"><span class="bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded text-xs font-semibold">সক্রিয়</span></td>
+                        <td class="py-3 px-4"><span class="bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text">সক্রিয়</span></td>
                         <td class="py-3 px-4 flex gap-2">
-                            <button onclick="alert('Shawon ব্লক করা হয়েছে')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium">ব্লক করুন</button>
-                            <button onclick="alert('Shawon ডিলিট করা হয়েছে')" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium">ডিলিট</button>
+                            <button onclick="toggleBlock(this)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ব্লক করুন</button>
+                            <button onclick="deleteUser(this)" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ডিলিট</button>
                         </td>
                     </tr>
                     <!-- User 2 (Blocked) -->
-                    <tr>
+                    <tr data-status="blocked">
                         <td class="py-3 px-4">
                             <div class="font-semibold text-white">shamim</div>
                             <div class="text-xs text-slate-400">পাসওয়ার্ড: <span class="text-amber-300 font-mono">789012</span></div>
                         </td>
                         <td class="py-3 px-4 flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500" title="অফলাইন (Offline)"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500" title="অফলাইন"></span>
                             <span class="bg-[#0f172a] border border-slate-700 px-2 py-1 rounded text-xs text-slate-300">Device-2iks1q8</span>
                         </td>
-                        <td class="py-3 px-4"><span class="bg-rose-600/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded text-xs font-semibold">ব্লকড</span></td>
+                        <td class="py-3 px-4"><span class="bg-rose-600/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text">ব্লকড</span></td>
                         <td class="py-3 px-4 flex gap-2">
-                            <button onclick="alert('Shamim আনব্লক করা হয়েছে')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1 rounded text-xs font-medium">আনব্লক</button>
-                            <button onclick="alert('Shamim ডিলিট করা হয়েছে')" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium">ডিলিট</button>
+                            <button onclick="toggleBlock(this)" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">আনব্লক</button>
+                            <button onclick="deleteUser(this)" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ডিলিট</button>
                         </td>
                     </tr>
                 </tbody>
@@ -134,5 +134,122 @@
         </div>
     </div>
 
+    <script>
+        // নতুন ইউজার তৈরি (লগইন ছাড়া)
+        function addNewUser(event) {
+            event.preventDefault();
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+
+            const tbody = document.getElementById('userTableBody');
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-status', 'pending');
+
+            newRow.innerHTML = `
+                <td class="py-3 px-4">
+                    <div class="font-semibold text-white">${username}</div>
+                    <div class="text-xs text-slate-400">পাসওয়ার্ড: <span class="text-amber-300 font-mono">${password}</span></div>
+                </td>
+                <td class="py-3 px-4 text-slate-500 text-xs italic">
+                    লগইন অপেক্ষমান (ব্রাউজার ও ডিভাইস উন্মুক্ত)
+                </td>
+                <td class="py-3 px-4"><span class="bg-amber-600/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text">অপেক্ষমান</span></td>
+                <td class="py-3 px-4 flex gap-2">
+                    <button onclick="simulateLogin(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">লগইন সিমুলেট</button>
+                    <button onclick="deleteUser(this)" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ডিলিট</button>
+                </td>
+            `;
+
+            tbody.appendChild(newRow);
+            document.getElementById('addUserForm').reset();
+            updateStats();
+            alert('নতুন ইউজার সফলভাবে তৈরি হয়েছে!');
+        }
+
+        // ইউজার ব্রাউজার/ডিভাইসে লগইন করলে সেশন একটিভ হওয়া
+        function simulateLogin(button) {
+            const row = button.closest('tr');
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let deviceId = 'Device-';
+            for (let i = 0; i < 7; i++) {
+                deviceId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            row.setAttribute('data-status', 'active');
+            
+            const deviceCell = row.querySelector('td:nth-child(2)');
+            deviceCell.className = "py-3 px-4 flex items-center gap-2";
+            deviceCell.innerHTML = `
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="অনলাইন সেশন"></span>
+                <span class="bg-[#0f172a] border border-slate-700 px-2 py-1 rounded text-xs text-slate-300">${deviceId}</span>
+            `;
+
+            const statusSpan = row.querySelector('.status-text');
+            statusSpan.className = "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text";
+            statusSpan.innerText = "সক্রিয়";
+
+            const actionCell = row.querySelector('td:nth-child(4)');
+            actionCell.innerHTML = `
+                <button onclick="toggleBlock(this)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ব্লক করুন</button>
+                <button onclick="deleteUser(this)" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer">ডিলিট</button>
+            `;
+
+            updateStats();
+        }
+
+        // ব্লক/আনব্লক ফাংশন
+        function toggleBlock(button) {
+            const row = button.closest('tr');
+            const statusSpan = row.querySelector('.status-text');
+            const dotSpan = row.querySelector('td:nth-child(2) span:first-child');
+            const currentStatus = row.getAttribute('data-status');
+
+            if (currentStatus === 'active') {
+                row.setAttribute('data-status', 'blocked');
+                statusSpan.className = "bg-rose-600/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text";
+                statusSpan.innerText = "ব্লকড";
+                if(dotSpan) dotSpan.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+                button.className = "bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer";
+                button.innerText = "আনব্লক";
+            } else if (currentStatus === 'blocked') {
+                row.setAttribute('data-status', 'active');
+                statusSpan.className = "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded text-xs font-semibold status-text";
+                statusSpan.innerText = "সক্রিয়";
+                if(dotSpan) dotSpan.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+                button.className = "bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium cursor-pointer";
+                button.innerText = "ব্লক করুন";
+            }
+            updateStats();
+        }
+
+        // ইউজার ডিলিট ফাংশন
+        function deleteUser(button) {
+            if (confirm('আপনি কি নিশ্চিতভাবে এই ইউজারটি ডিলিট করতে চান?')) {
+                button.closest('tr').remove();
+                updateStats();
+            }
+        }
+
+        // কাউন্ট আপডেট ফাংশন
+        function updateStats() {
+            const rows = document.querySelectorAll('#userTableBody tr');
+            let total = rows.length;
+            let active = 0;
+            let blocked = 0;
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (status === 'active') {
+                    active++;
+                } else if (status === 'blocked') {
+                    blocked++;
+                }
+            });
+
+            document.getElementById('totalUsers').innerText = total;
+            document.getElementById('activeUsers').innerText = active;
+            document.getElementById('blockedUsers').innerText = blocked;
+        }
+    </script>
 </body>
 </html>
