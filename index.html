@@ -109,8 +109,8 @@
     </div>
 
     <script>
-        // আপনার ক্লাউডফ্লেয়ার ওয়ার্কারের সঠিক লিংক
-        const API_URL = "https://pb.bushmr263.workers.dev";
+        // আপনার সঠিক ব্যাকএন্ড ওয়ার্কার লিংক (admin)
+        const API_URL = "https://admin.bushmr263.workers.dev";
 
         // সার্ভার থেকে ইউজার তালিকা ফেচ করা
         async function loadUsers() {
@@ -120,7 +120,7 @@
                 renderTable(users);
             } catch (err) {
                 console.error("Error:", err);
-                document.getElementById('userTableBody').innerHTML = `<tr><td colspan="4" class="py-4 text-center text-rose-400">ডাটা লোড করতে সমস্যা হয়েছে!</td></tr>`;
+                document.getElementById('userTableBody').innerHTML = `<tr><td colspan="4" class="py-4 text-center text-rose-400">ডাটা লোড করতে সমস্যা হয়েছে!</td></tr>`;
             }
         }
 
@@ -135,7 +135,7 @@
             let blockedCount = 0;
 
             if (total === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">কোনো ইউজার পাওয়া যায়নি।</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">কোনো ইউজার পাওয়া যায়নি।</td></tr>`;
             }
 
             usernames.forEach(username => {
@@ -203,10 +203,10 @@
                     document.getElementById('addUserForm').reset();
                     loadUsers();
                 } else {
-                    alert('ইউজার যোগ করতে সমস্যা হয়েছে!');
+                    alert('ইউজার যোগ করতে সমস্যা হয়েছে!');
                 }
             } catch (err) {
-                alert('সার্ভারে সংযোগ করতে সমস্যা হয়েছে!');
+                alert('সার্ভারে সংযোগ করতে সমস্যা হয়েছে!');
             } finally {
                 btn.innerText = "+ ইউজার যোগ করুন";
                 btn.disabled = false;
@@ -223,7 +223,7 @@
                 });
                 loadUsers();
             } catch (err) {
-                alert('স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!');
+                alert('স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!');
             }
         }
 
@@ -238,12 +238,12 @@
                     });
                     loadUsers();
                 } catch (err) {
-                    alert('ডিলিট করতে সমস্যা হয়েছে!');
+                    alert('ডিলিট করতে সমস্যা হয়েছে!');
                 }
             }
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে ডাটা ফেচ করা
+        // পেজ লোড হওয়ার সাথে সাথে ডাটা ফেচ করা
         loadUsers();
     </script>
 </body>
