@@ -125,6 +125,17 @@
             color: #94a3b8;
             margin-bottom: 15px;
         }
+        .mac-info {
+            margin-top: 12px;
+            padding: 8px 10px;
+            background-color: #0b1329;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #fbbf24;
+            text-align: center;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +155,8 @@
                     <input type="password" id="password" placeholder="পাসওয়ার্ড দিন" autocomplete="current-password" required>
                 </div>
                 <button type="submit" id="submitBtn">লগইন করুন</button>
-                <button type="button" id="resetBtn" onclick="resetSession()">পুরোনো লগইন ডেটা রিসেট করুন</button>
+                <button type="button" id="resetBtn" onclick="resetSession()">MAC ID রিসেট করুন</button>
+                <div class="mac-info" id="macDisplay">MAC ID লোড হচ্ছে...</div>
                 <div id="status-msg"></div>
             </form>
         </div>
@@ -166,13 +178,41 @@
     </div>
 
     <script>
+        function detectDeviceType() {
+            const ua = navigator.userAgent || "";
+            return /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ? "MOBILE" : "PC";
+        }
+
+        function getOrCreateMacId() {
+            let macId = "";
+            try {
+                macId = localStorage.getItem("pb_device_id") || "";
+                if (!macId) {
+                    const hex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0").toUpperCase();
+                    macId = `${detectDeviceType()}-${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}`;
+                    localStorage.setItem("pb_device_id", macId);
+                }
+            } catch (e) {
+                macId = detectDeviceType() + "-00:11:22:33:44:55";
+            }
+            const displayEl = document.getElementById("macDisplay");
+            if (displayEl) {
+                displayEl.textContent = "MAC ID: " + macId;
+            }
+            return macId;
+        }
+
+        getOrCreateMacId();
+
         function resetSession() {
             try {
                 localStorage.removeItem("pb_logged_username");
                 localStorage.removeItem("pb_device_id");
             } catch (e) {}
-            document.getElementById("status-msg").style.color = "#4ade80";
-            document.getElementById("status-msg").textContent = "পুরোনো ডেটা মুছে ফেলা হয়েছে। এখন লগইন করুন।";
+            const newMac = getOrCreateMacId();
+            const statusMsg = document.getElementById("status-msg");
+            statusMsg.style.color = "#4ade80";
+            statusMsg.textContent = "নতুন MAC ID তৈরি হয়েছে (" + newMac + ")। এখন লগইন করুন।";
         }
 
         document.getElementById("loginForm").addEventListener("submit", async function(e) {
@@ -187,16 +227,7 @@
             statusMsg.textContent = "লগইন হচ্ছে, অপেক্ষা করুন...";
             submitBtn.disabled = true;
 
-            let deviceId = "";
-            try {
-                deviceId = localStorage.getItem("pb_device_id") || "";
-                if (!deviceId) {
-                    deviceId = "Device-" + Math.random().toString(36).substring(2, 9);
-                    localStorage.setItem("pb_device_id", deviceId);
-                }
-            } catch (e) {
-                deviceId = "Device-" + Date.now();
-            }
+            const deviceId = getOrCreateMacId();
 
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), 10000);
@@ -229,7 +260,7 @@
                         localStorage.setItem("pb_device_id", deviceId);
                     } catch (e) {}
                     statusMsg.style.color = "#4ade80";
-                    statusMsg.textContent = "লগইন সফল! পেজে নেওয়া হচ্ছে...";
+                    statusMsg.textContent = "লগইন সফল! প্লেয়ারে নেওয়া হচ্ছে...";
                     window.location.replace("./index.html");
                 } else {
                     statusMsg.style.color = "#f87171";
